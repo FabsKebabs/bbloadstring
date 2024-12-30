@@ -132,6 +132,22 @@ local success, errorMessage = pcall(function()
         end,
     })
 
+    -- Target Player Button (Added)
+    parrySettingsTab:AddButton({
+        Name = "Target Player",
+        Callback = function()
+            print("Target Player Script Loaded!")
+            local targetPlayerScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/PlayerLock/refs/heads/main/Target"))()
+
+            OrionLib:MakeNotification({
+                Name = "Target Player",
+                Content = "Target Player script loaded successfully!",
+                Image = "rbxassetid://4483345998",
+                Time = 3
+            })
+        end,
+    })
+
 end)
 
 if not success then
