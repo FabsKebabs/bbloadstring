@@ -130,7 +130,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-   
+   end)
 
 if not success then
     warn("Error creating window: " .. errorMessage)
