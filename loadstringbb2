@@ -30,12 +30,9 @@ local success, errorMessage = pcall(function()
         PremiumOnly = false,
     })
 
- 
-
     -- Default Auto Parry Settings
     local parryDistance = 0.38
     local parrySpeed = 20
-   
 
     -- Auto Parry Button
     mainTab:AddButton({
@@ -74,8 +71,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-
-       -- Text
+    -- Text
     mainTab:AddLabel("Make sure to set Auto Parry Settings FIRST Before Enabling")
 
     -- Walkspeed Slider
@@ -91,8 +87,6 @@ local success, errorMessage = pcall(function()
             print("Walkspeed set to: " .. value)
         end,
     })
-
-
 
     -- FOV Slider
     playerConfigTab:AddSlider({
@@ -136,7 +130,94 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-   end)
+    -- Dropdown for Camera Lock (with player usernames)
+    local cameraLockEnabled = false
+    local targetPlayer = nil
+    local playerList = {}
+
+    -- Create a list of players in the game
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(playerList, player.Name)
+        end
+    end
+
+    parrySettingsTab:AddDropdown({
+        Name = "Camera Lock (Select Player)",
+        Options = playerList,
+        Default = 1,
+        Callback = function(selectedPlayer)
+            -- Find the selected player by username
+            targetPlayer = game.Players:FindFirstChild(selectedPlayer)
+
+            if targetPlayer then
+                cameraLockEnabled = true
+                print("Camera Lock enabled on player: " .. selectedPlayer)
+            else
+                cameraLockEnabled = false
+                print("Camera Lock disabled.")
+            end
+        end,
+    })
+
+    -- Camera Lock Code
+    local userInputService = game:GetService("UserInputService")
+    local camera = game:GetService("Workspace").CurrentCamera
+    local playerCharacter = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+
+    -- Function to track target's movements without changing camera position
+    local function trackTargetMovement()
+        if cameraLockEnabled and targetPlayer then
+            local targetCharacter = targetPlayer.Character
+            if targetCharacter and targetCharacter:FindFirstChild("HumanoidRootPart") then
+                local targetPosition = targetCharacter.HumanoidRootPart.Position
+
+                -- Keep the camera locked to a fixed height above the ground (cameraHeightOffset)
+                local cameraPosition = camera.CFrame.Position
+                local newCameraPosition = Vector3.new(cameraPosition.X, targetPosition.Y + 5, cameraPosition.Z)
+
+                -- Camera does not move, just updates the direction it's facing
+                local directionToTarget = targetPosition - newCameraPosition
+                local lookAtPosition = targetPosition + Vector3.new(0, 5, 0)  -- Adjust this to give a slight vertical offset if needed
+
+                -- Update the camera's CFrame to face the target's direction and lock the camera position
+                camera.CFrame = CFrame.new(newCameraPosition, lookAtPosition)
+            end
+        end
+    end
+
+   -- Monitor the target player's health
+    local function monitorPlayerHealth()
+        if cameraLockEnabled and targetPlayer then
+            local humanoid = targetPlayer.Character and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.HealthChanged:Connect(function()
+                    if humanoid.Health <= 0 then
+                        cameraLockEnabled = false
+                        targetPlayer = nil
+                        print("Target player is dead. Camera Lock disabled.")
+                    end
+                end)
+            end
+        end
+    end
+
+    -- Detect when the "C" key is pressed to stop the lock
+    userInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.C then
+            -- Stop the lock when "C" is pressed
+            cameraLockEnabled = false
+            targetPlayer = nil
+            print("Camera Lock disabled.")
+        end
+    end)
+
+    -- Run the tracking function every frame to update camera view
+    game:GetService("RunService").RenderStepped:Connect(trackTargetMovement)
+
+end)
 
 if not success then
     warn("Error creating window: " .. errorMessage)
