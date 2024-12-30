@@ -33,19 +33,7 @@ local success, errorMessage = pcall(function()
     -- Default Auto Parry Settings
     local parryDistance = 0.55
     local parrySpeed = 20
-    local targetPlayer = nil
-
-    -- Function to update camera to follow the selected player
-    local function updateCameraFollow()
-        if targetPlayer and targetPlayer.Character then
-            local character = targetPlayer.Character
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart then
-                game.Workspace.CurrentCamera.CameraSubject = humanoidRootPart
-                game.Workspace.CurrentCamera.CFrame = CFrame.new(humanoidRootPart.Position + Vector3.new(0, 5, -10), humanoidRootPart.Position)
-            end
-        end
-    end
+   
 
     -- Auto Parry Button
     mainTab:AddButton({
@@ -154,31 +142,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Player Target Dropdown
-    parrySettingsTab:AddDropdown({
-        Name = "Player Target",
-        Options = function()
-            local players = {}
-            for _, player in pairs(game.Players:GetPlayers()) do
-                if player ~= game.Players.LocalPlayer then
-                    table.insert(players, player.Name)
-                end
-            end
-            return players
-        end,
-        Default = 1,
-        Callback = function(playerName)
-            targetPlayer = game.Players:FindFirstChild(playerName)
-            if targetPlayer then
-                print("Targeting player: " .. targetPlayer.Name)
-                updateCameraFollow()  -- Update the camera to follow the selected player
-            else
-                print("Player not found.")
-            end
-        end,
-    })
-
-end)
+   
 
 if not success then
     warn("Error creating window: " .. errorMessage)
