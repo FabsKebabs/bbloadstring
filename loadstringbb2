@@ -30,6 +30,8 @@ local success, errorMessage = pcall(function()
         PremiumOnly = false,
     })
 
+ 
+
     -- Default Auto Parry Settings
     local parryDistance = 0.38
     local parrySpeed = 20
@@ -71,6 +73,10 @@ local success, errorMessage = pcall(function()
             })
         end,
     })
+
+
+       -- Text
+    mainTab:AddLabel("Make sure to set Auto Parry Settings FIRST Before Enabling")
 
     -- Walkspeed Slider
     playerConfigTab:AddSlider({
