@@ -25,23 +25,36 @@ local success, errorMessage = pcall(function()
         PremiumOnly = false,
     })
 
-    -- Hardcoded settings for auto parry
+    local parrySettingsTab = Window:MakeTab({
+        Name = "Parry Settings",
+        PremiumOnly = false,
+    })
+
+    -- Default Auto Parry Settings
     local parryDistance = 0.55
     local parrySpeed = 10
     local parryCooldown = 1
+    local autoParryScript
+
+    -- Load Auto Parry Script
+    local function LoadAutoParry()
+        if not autoParryScript then
+            autoParryScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/bbspbzyd/refs/heads/main/bbsv3"))()
+        end
+
+        -- Update settings dynamically
+        autoParryScript.SetParryDistance(parryDistance)
+        autoParryScript.SetParrySpeed(parrySpeed)
+        autoParryScript.SetParryCooldown(parryCooldown)
+
+        print("Auto Parry settings updated: Distance =", parryDistance, ", Speed =", parrySpeed, ", Cooldown =", parryCooldown)
+    end
 
     -- Auto Parry Button
     mainTab:AddButton({
         Name = "Auto Parry",
         Callback = function()
-            print("Auto Parry Enabled!")
-            local autoParryScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/bbspbzyd/refs/heads/main/bbsv3"))()
-
-            -- Pass the hardcoded parameters to the Auto Parry script
-            autoParryScript.SetParryDistance(parryDistance)
-            autoParryScript.SetParrySpeed(parrySpeed)
-            autoParryScript.SetParryCooldown(parryCooldown)
-
+            LoadAutoParry()
             OrionLib:MakeNotification({
                 Name = "Auto Parry",
                 Content = "Auto Parry Enabled!",
@@ -57,9 +70,7 @@ local success, errorMessage = pcall(function()
         Callback = function()
             local player = game.Players.LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
-
-            -- Reset the character's position or respawn the character
-            character:BreakJoints() -- This will force the character to die and respawn
+            character:BreakJoints()
             print("Respawned the character!")
             OrionLib:MakeNotification({
                 Name = "Respawn",
@@ -70,7 +81,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Slider for Walkspeed (Min: 30, Max: 50)
+    -- Walkspeed Slider
     playerConfigTab:AddSlider({
         Name = "Walkspeed",
         Min = 30,
@@ -84,7 +95,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Slider for Jump Height
+    -- Jump Height Slider
     playerConfigTab:AddSlider({
         Name = "Jump Height",
         Min = 50,
@@ -98,7 +109,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Slider for FOV
+    -- FOV Slider
     playerConfigTab:AddSlider({
         Name = "Field of View",
         Min = 70,
@@ -109,6 +120,51 @@ local success, errorMessage = pcall(function()
         Callback = function(value)
             game:GetService("Workspace").CurrentCamera.FieldOfView = value
             print("FOV set to: " .. value)
+        end,
+    })
+
+    -- Parry Distance Slider
+    parrySettingsTab:AddSlider({
+        Name = "Parry Distance",
+        Min = 0.1,
+        Max = 2.0,
+        Default = parryDistance,
+        Color = Color3.fromRGB(255, 165, 0),
+        Increment = 0.05,
+        Callback = function(value)
+            parryDistance = value
+            LoadAutoParry()
+            print("Parry Distance set to: " .. value)
+        end,
+    })
+
+    -- Parry Speed Slider
+    parrySettingsTab:AddSlider({
+        Name = "Parry Speed",
+        Min = 5,
+        Max = 20,
+        Default = parrySpeed,
+        Color = Color3.fromRGB(255, 165, 0),
+        Increment = 1,
+        Callback = function(value)
+            parrySpeed = value
+            LoadAutoParry()
+            print("Parry Speed set to: " .. value)
+        end,
+    })
+
+    -- Parry Cooldown Slider
+    parrySettingsTab:AddSlider({
+        Name = "Parry Cooldown",
+        Min = 0.5,
+        Max = 5.0,
+        Default = parryCooldown,
+        Color = Color3.fromRGB(255, 165, 0),
+        Increment = 0.1,
+        Callback = function(value)
+            parryCooldown = value
+            LoadAutoParry()
+            print("Parry Cooldown set to: " .. value)
         end,
     })
 
