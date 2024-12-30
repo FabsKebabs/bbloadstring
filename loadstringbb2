@@ -6,7 +6,6 @@ if not OrionLib then
 end
 
 local success, errorMessage = pcall(function()
-    -- Create the main window
     local Window = OrionLib:MakeWindow({
         Name = [[<font color="rgb(255, 165, 0)">Publoader-Blade Ball</font>]],
         HidePremium = false,
@@ -16,7 +15,6 @@ local success, errorMessage = pcall(function()
         TitleColor = Color3.fromRGB(255, 165, 0),
     })
 
-    -- Tabs
     local mainTab = Window:MakeTab({
         Name = "Main",
         PremiumOnly = false,
@@ -32,21 +30,16 @@ local success, errorMessage = pcall(function()
         PremiumOnly = false,
     })
 
-    -- Default Auto Parry Settings
     local parryDistance = 0.38
     local parrySpeed = 20
 
-    -- Auto Parry Button
     mainTab:AddButton({
         Name = "Auto Parry",
         Callback = function()
             print("Auto Parry Enabled!")
             local autoParryScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/bbspbzyd/refs/heads/main/bbsv3"))()
-
-            -- Pass parameters to Auto Parry script
             autoParryScript.SetParryDistance(parryDistance)
             autoParryScript.SetParrySpeed(parrySpeed)
-
             OrionLib:MakeNotification({
                 Name = "Auto Parry",
                 Content = "Auto Parry Enabled!",
@@ -56,7 +49,6 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Respawn Button
     mainTab:AddButton({
         Name = "Respawn",
         Callback = function()
@@ -73,10 +65,8 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Text
     mainTab:AddLabel("Make sure to set Auto Parry Settings FIRST Before Enabling")
 
-    -- Walkspeed Slider
     playerConfigTab:AddSlider({
         Name = "Walkspeed",
         Min = 30,
@@ -90,7 +80,6 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- FOV Slider
     playerConfigTab:AddSlider({
         Name = "Field of View",
         Min = 70,
@@ -104,10 +93,9 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Parry Distance Slider
     parrySettingsTab:AddSlider({
         Name = "Parry Distance",
-        Min = 0.25,  -- Updated minimum value
+        Min = 0.25,
         Max = 2.0,
         Default = parryDistance,
         Color = Color3.fromRGB(255, 165, 0),
@@ -118,7 +106,6 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Parry Speed Slider
     parrySettingsTab:AddSlider({
         Name = "Parry Speed",
         Min = 15,
@@ -132,13 +119,11 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Target Player Button (Added)
     parrySettingsTab:AddButton({
         Name = "Target Player",
         Callback = function()
             print("Target Player Script Loaded!")
             local targetPlayerScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/PlayerLock/refs/heads/main/Target"))()
-
             OrionLib:MakeNotification({
                 Name = "Target Player",
                 Content = "Target Player script loaded successfully!",
@@ -147,7 +132,6 @@ local success, errorMessage = pcall(function()
             })
         end,
     })
-
 end)
 
 if not success then
