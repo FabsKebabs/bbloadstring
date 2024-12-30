@@ -143,7 +143,7 @@ local success, errorMessage = pcall(function()
     end
 
     parrySettingsTab:AddDropdown({
-        Name = "Camera Lock (Select Player)",
+        Name = "Player Target (Select Player)",
         Options = playerList,
         Default = 1,
         Callback = function(selectedPlayer)
