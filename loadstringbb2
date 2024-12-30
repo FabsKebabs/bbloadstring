@@ -86,19 +86,7 @@ local success, errorMessage = pcall(function()
         end,
     })
 
-    -- Jump Height Slider
-    playerConfigTab:AddSlider({
-        Name = "Jump Height",
-        Min = 50,
-        Max = 150,
-        Default = 50,
-        Color = Color3.fromRGB(255, 165, 0),
-        Increment = 1,
-        Callback = function(value)
-            game.Players.LocalPlayer.Character.Humanoid.JumpHeight = value
-            print("Jump Height set to: " .. value)
-        end,
-    })
+
 
     -- FOV Slider
     playerConfigTab:AddSlider({
