@@ -31,7 +31,7 @@ local success, errorMessage = pcall(function()
     })
 
     -- Default Auto Parry Settings
-    local parryDistance = 0.55
+    local parryDistance = 0.38
     local parrySpeed = 20
    
 
