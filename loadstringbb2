@@ -34,27 +34,19 @@ local success, errorMessage = pcall(function()
     local parryDistance = 0.55
     local parrySpeed = 10
     local parryCooldown = 1
-    local autoParryScript
-
-    -- Load Auto Parry Script
-    local function LoadAutoParry()
-        if not autoParryScript then
-            autoParryScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/bbspbzyd/refs/heads/main/bbsv3"))()
-        end
-
-        -- Update settings dynamically
-        autoParryScript.SetParryDistance(parryDistance)
-        autoParryScript.SetParrySpeed(parrySpeed)
-        autoParryScript.SetParryCooldown(parryCooldown)
-
-        print("Auto Parry settings updated: Distance =", parryDistance, ", Speed =", parrySpeed, ", Cooldown =", parryCooldown)
-    end
 
     -- Auto Parry Button
     mainTab:AddButton({
         Name = "Auto Parry",
         Callback = function()
-            LoadAutoParry()
+            print("Auto Parry Enabled!")
+            local autoParryScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/FabsKebabs/bbspbzyd/refs/heads/main/bbsv3"))()
+
+            -- Pass parameters to Auto Parry script
+            autoParryScript.SetParryDistance(parryDistance)
+            autoParryScript.SetParrySpeed(parrySpeed)
+            autoParryScript.SetParryCooldown(parryCooldown)
+
             OrionLib:MakeNotification({
                 Name = "Auto Parry",
                 Content = "Auto Parry Enabled!",
@@ -133,7 +125,6 @@ local success, errorMessage = pcall(function()
         Increment = 0.05,
         Callback = function(value)
             parryDistance = value
-            LoadAutoParry()
             print("Parry Distance set to: " .. value)
         end,
     })
@@ -148,7 +139,6 @@ local success, errorMessage = pcall(function()
         Increment = 1,
         Callback = function(value)
             parrySpeed = value
-            LoadAutoParry()
             print("Parry Speed set to: " .. value)
         end,
     })
@@ -163,7 +153,6 @@ local success, errorMessage = pcall(function()
         Increment = 0.1,
         Callback = function(value)
             parryCooldown = value
-            LoadAutoParry()
             print("Parry Cooldown set to: " .. value)
         end,
     })
